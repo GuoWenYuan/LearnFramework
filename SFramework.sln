@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFramework.Core", "SFramework.Core.csproj", "{b33b6910-7f35-239f-a8f1-b8244fb2a920}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{f9d582ef-12da-3622-1a74-7c3a1a673f2b}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFramework.Runtime", "SFramework.Runtime.csproj", "{43194035-d382-1bbe-a99e-34f676f7b5eb}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFramework.Editor", "SFramework.Editor.csproj", "{6fd87064-f1ec-b813-9a46-4350a3ecd64d}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{b33b6910-7f35-239f-a8f1-b8244fb2a920}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{b33b6910-7f35-239f-a8f1-b8244fb2a920}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{f9d582ef-12da-3622-1a74-7c3a1a673f2b}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{f9d582ef-12da-3622-1a74-7c3a1a673f2b}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43194035-d382-1bbe-a99e-34f676f7b5eb}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43194035-d382-1bbe-a99e-34f676f7b5eb}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6fd87064-f1ec-b813-9a46-4350a3ecd64d}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6fd87064-f1ec-b813-9a46-4350a3ecd64d}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
