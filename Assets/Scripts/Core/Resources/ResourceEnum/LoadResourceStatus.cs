@@ -3,9 +3,14 @@
     public enum LoadResourceStatus : byte
     {
         /// <summary>
+        /// 无状态
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// 加载资源完成。
         /// </summary>
-        Success = 0,
+        Success ,
 
         /// <summary>
         /// 资源不存在。

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace SFramework.Core
 {
@@ -154,6 +155,22 @@ namespace SFramework.Core
         /// </summary>
         /// <param name="currentVariant">当前变体。</param>
         void SetCurrentVariant(string currentVariant);
+
+        /// <summary>
+        /// 加载资源
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="assetName"></param>
+        /// <returns></returns>
+        T LoadAsset<T>(string assetName) where T: UnityEngine.Object;
+
+        /// <summary>
+        /// 异步加载资源
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="assetName"></param>
+        /// <returns></returns>
+        IEnumerator LoadAssetAsync<T>(string assetName) where T:UnityEngine.Object;
 
     }
 }

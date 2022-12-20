@@ -26,7 +26,7 @@ namespace SFramework.Core
             Init();
         }
 
-        public static void Init()
+        private static void Init()
         {
             foreach (var manager in SGameManagers)
             {
