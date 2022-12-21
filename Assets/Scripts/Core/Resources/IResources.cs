@@ -3,28 +3,13 @@ using System.Collections;
 
 namespace SFramework.Core
 {
-    public interface IResources
+    public interface IResource
     {
-        /// <summary>
-        /// 只读资源路径
-        /// </summary>
-        string ReadOnlyPath
-        {
-            get;
-        }
-
-        /// <summary>
-        /// 获取读写路径
-        /// </summary>
-        string ReadWritePath
-        {
-            get;
-        }
 
         /// <summary>
         /// 资源模式
         /// </summary>
-        ResourceMode ResourcesMode
+        ResourceMode ResourceMode
         {
             get;
         }
@@ -48,18 +33,12 @@ namespace SFramework.Core
         /// <summary>
         /// 资源数量
         /// </summary>
-        int ResourcesCount
+        int BundleCount
         {
             get;
         }
 
-        /// <summary>
-        /// 资源组 数量
-        /// </summary>
-        int ResourcesGroupCount
-        {
-            get;
-        }
+
         /// <summary>
         /// 获取或设置资源对象池自动释放可释放对象的间隔秒数。
         /// </summary>
@@ -78,27 +57,13 @@ namespace SFramework.Core
             set;
         }
 
-        /// <summary>
-        /// 获取或设置资源对象池对象过期秒数。
-        /// </summary>
-        float AssetExpireTime
-        {
-            get;
-            set;
-        }
 
-        /// <summary>
-        /// 获取或设置资源对象池的优先级。
-        /// </summary>
-        int AssetPriority
-        {
-            get;
-            set;
-        }
+
+
         /// <summary>
         /// 获取或设置资源对象池自动释放可释放对象的间隔秒数。
         /// </summary>
-        float ResourceAutoReleaseInterval
+        float BundleAutoReleaseInterval
         {
             get;
             set;
@@ -107,29 +72,15 @@ namespace SFramework.Core
         /// <summary>
         /// 获取或设置资源对象池的容量。
         /// </summary>
-        int ResourceCapacity
+        int BundleCapacity
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// 获取或设置资源对象池对象过期秒数。
-        /// </summary>
-        float ResourceExpireTime
-        {
-            get;
-            set;
-        }
+  
 
-        /// <summary>
-        /// 获取或设置资源对象池的优先级。
-        /// </summary>
-        int ResourcePriority
-        {
-            get;
-            set;
-        }
+
 
 
         /// <summary>

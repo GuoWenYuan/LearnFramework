@@ -85,7 +85,7 @@ namespace SFramework.Core
             m_Done = false;
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             InitTaskDefault();
         }

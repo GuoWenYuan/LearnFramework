@@ -58,6 +58,27 @@ namespace SFramework.Core
                 }
             }
 
+            /// <summary>
+            /// AssetBundle路径
+            /// </summary>
+            public static string ReadWriteAssetBundleDir
+            {
+                get 
+                {
+                    return HotFixDataPath + "AssetBundles/";
+                }
+            }
+            /// <summary>
+            /// Bundle的只读路径
+            /// </summary>
+            public static string ReadOnlyAssetBundlePath
+            {
+                get
+                {
+                    return StreamingAssetsPath + "AssetBundles/";
+                }
+            }
+
         }
     }
 

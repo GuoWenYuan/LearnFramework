@@ -4,7 +4,7 @@ namespace SFramework.Core
     /// <summary>
     /// 任务接口
     /// </summary>
-    public interface ITaskAgent<T> : IUpdate,IShutDown where T: TaskBase
+    public interface ITaskAgent<T> : IUpdate,IShutDown,IReference where T: TaskBase
     {
         /// <summary>
         /// 获取任务
