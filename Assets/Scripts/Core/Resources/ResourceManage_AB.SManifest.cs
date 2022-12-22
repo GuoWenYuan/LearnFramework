@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SFramework.Core
 {
-    public partial class ResourceManager
+    public partial class ResourceManager_AB
     {
         /// <summary>
         /// Bundle类型

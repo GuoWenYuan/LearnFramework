@@ -113,7 +113,7 @@ namespace SFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="assetName"></param>
         /// <returns></returns>
-        T LoadAsset<T>(string assetName) where T: UnityEngine.Object;
+        T LoadAsset<T>(string assetName, LoadAssetCallBacks loadAssetCallBacks) where T: UnityEngine.Object;
 
         /// <summary>
         /// 异步加载资源
@@ -121,7 +121,7 @@ namespace SFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="assetName"></param>
         /// <returns></returns>
-        IEnumerator LoadAssetAsync<T>(string assetName) where T:UnityEngine.Object;
+        T LoadAssetAsync<T>(string assetName, LoadAssetCallBacks loadAssetCallBacks) where T:UnityEngine.Object;
 
     }
 }

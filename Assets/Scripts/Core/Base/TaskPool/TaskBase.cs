@@ -84,6 +84,21 @@ namespace SFramework.Core
             m_UserData = userData;
             m_Done = false;
         }
+        /// <summary>
+        /// 转换userdata
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetUserData<T>() where T : class
+        {
+            if (UserData == null)
+            {
+                return default(T);
+            }
+            if (UserData.GetType() == typeof(T))
+                return (T)UserData;
+            return default(T);
+        }
 
         public virtual void Clear()
         {

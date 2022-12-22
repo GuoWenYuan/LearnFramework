@@ -14,6 +14,7 @@ namespace SFramework.Core
         private SUnityTime m_UnityTime;
 
         public SUnityTime UnityTime => m_UnityTime;
+
         public override void OnInit()
         {
             m_Timers = new List<Timer>();
