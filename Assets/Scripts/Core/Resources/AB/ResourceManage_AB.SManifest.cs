@@ -20,10 +20,15 @@ namespace SFramework.Core
             /// 常驻
             /// </summary>
             Permanent = 1 << 2,
+
+            /// <summary>
+            /// 公用资源
+            /// </summary>
+            Public = 1 << 3,
             /// <summary>
             /// 允许立即释放
             /// </summary>
-            AllowReleasse = 1 << 3,
+            AllowReleasse = 1 << 4,
 
         }
         /// <summary>
@@ -61,19 +66,17 @@ namespace SFramework.Core
             /// </summary>
             public bool isScene;
 
-            private bool m_IsValid;
-            public bool isValid
-            {
-                get 
-                {
-                    if (!m_IsValid && !string.IsNullOrEmpty(hash))
-                    { 
-                        m_IsValid = Hash128.Parse(hash).isValid;
-                        hash = string.Empty;
-                    }
-                    return m_IsValid;
-                }
-            }
+            /// <summary>
+            /// 文件的只读路径  streamingassetpath
+            /// </summary>
+            public string readOnlyPath;
+
+            /// <summary>
+            /// 文件的读写路径  persistentDataPath
+            /// </summary>
+            public string readWirtePath;
+
+ 
             /// <summary>
             /// 是否为该类型
             /// </summary>
@@ -115,6 +118,15 @@ namespace SFramework.Core
             private Dictionary<string,BundleInfo> m_BundlesDic = new Dictionary<string,BundleInfo>();
 
             /// <summary>
+            /// 每帧最大更新bundle个数
+            /// </summary>
+            public int maxLoadBundleCount = 10;
+            /// <summary>
+            /// Asset=>Bundle映射表
+            /// </summary>
+            private Dictionary<string,string> m_Asset2BundleDic = new Dictionary<string,string>();
+
+            /// <summary>
             /// 切换场景时禁止卸载资源
             /// </summary>
             public List<string> ChangeSceneSkipBundles = new List<string>()
@@ -128,25 +140,37 @@ namespace SFramework.Core
 
             public void OnAwake()
             {
+                m_BundlesDic.Clear();
+                m_Asset2BundleDic.Clear();
                 for (int i = 0; i < bundles.Count; i++)
                 {
                     BundleInfo bundleInfo = bundles[i];
-                    if (m_BundlesDic.ContainsKey(bundleInfo.bundleName))
+                    bundleInfo.readOnlyPath = Utility.Path.CombinePath(Utility.Path.ReadOnlyAssetBundlePath, bundleInfo.bundleName);
+                    bundleInfo.readWirtePath = Utility.Path.CombinePath(Utility.Path.ReadWriteAssetBundlePath, bundleInfo.bundleName);
+                    m_BundlesDic.Add(bundleInfo.bundleName, bundleInfo);
+                    foreach (var item in bundleInfo.assets)
                     {
-                        if (bundleInfo.dependencies != null && bundleInfo.dependencies.Length > 0)
-                        {
-                            m_BundlesDic.Remove(bundleInfo.bundleName);
-                            m_BundlesDic.Add(bundleInfo.bundleName, bundleInfo);
-                        }
-                    }
-                    else
-                    {
-                        m_BundlesDic.Add(bundleInfo.bundleName, bundleInfo);
+                        m_Asset2BundleDic.Add(item, bundleInfo.bundleName);
                     }
                 }
                 bundles.Clear();
                 bundles = null;
             }
+            /// <summary>
+            /// 将asset名称转换为bundle名称
+            /// </summary>
+            /// <param name="assetName"></param>
+            /// <returns></returns>
+            public string AssetToBundleName(string assetName)
+            {
+                if (!m_Asset2BundleDic.ContainsKey(assetName))
+                {
+                    SGameEntry.Log.Error("Don't Find asset BundleName:{0}", assetName);
+                    return null;
+                }
+                return m_Asset2BundleDic[assetName];
+            }
+
             /// <summary>
             /// 增加切换场景不销毁资源
             /// </summary>

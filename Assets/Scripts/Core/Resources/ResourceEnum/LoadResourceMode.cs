@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace SFramework.Core
 {
-    public enum LoadResourceMode
+    public enum LoadResourceMode : byte
     {
+
+        None = 0,
         /// <summary>
         /// 异步
         /// </summary>
@@ -17,6 +19,8 @@ namespace SFramework.Core
         /// 同步
         /// </summary>
         UnAysnc,
+
+
 
     }
 }

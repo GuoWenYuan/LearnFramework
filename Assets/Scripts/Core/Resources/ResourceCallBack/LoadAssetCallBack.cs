@@ -16,7 +16,7 @@
     /// <param name="loadResourceStatus">资源加载状态</param>
     /// <param name="errorMessage">错误信息</param>
     /// <param name="userData">用户自定义数据</param>
-    public delegate void LoadAssetFailureCallBack(string assetName, LoadResourceStatus loadResourceStatus,
+    public delegate void LoadAssetFailureCallBack(string assetName, LoadResourceResult loadResourceStatus,
         string errorMessage, object userData);
 
     /// <summary>

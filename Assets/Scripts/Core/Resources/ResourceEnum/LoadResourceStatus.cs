@@ -1,16 +1,30 @@
 ﻿namespace SFramework.Core
 {
-    public enum LoadResourceStatus : byte
+    public enum LoadResourceResult : byte
     {
         /// <summary>
         /// 无状态
         /// </summary>
         None = 0,
 
+
         /// <summary>
-        /// 加载资源完成。
+        /// 等待加载中
         /// </summary>
-        Success ,
+        Wait,
+        /// <summary>
+        /// 加载中
+        /// </summary>
+        Processing,
+        /// <summary>
+        /// 完成
+        /// </summary>
+        Complete,
+
+        /// <summary>
+        /// 取消加载
+        /// </summary>
+        Cancelled,
 
         /// <summary>
         /// 资源不存在。

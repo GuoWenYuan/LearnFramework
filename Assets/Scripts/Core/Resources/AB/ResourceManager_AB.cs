@@ -31,10 +31,7 @@ namespace SFramework.Core
         private Dictionary<int, AssetRef> m_AssetRefCloneDic = new Dictionary<int, AssetRef>();
         public int AssetCount => m_AssetRefCloneDic.Count;
 
-        /// <summary>
-        /// bundle资源池
-        /// </summary>
-        private Dictionary<string, BundleRef> m_BundleRefDic = new Dictionary<string, BundleRef>();
+   
 
      
 
@@ -42,7 +39,7 @@ namespace SFramework.Core
         /// Asset和bundle名称的映射表
         /// </summary>
         private Dictionary<AssetRef, BundleRef> m_Asset2BundleNameDic = new Dictionary<AssetRef, BundleRef>();
-        public int BundleCount => m_BundleRefDic.Count;
+        public int BundleCount => m_ResourceLoader.BundleCount;
 
 
         public float AssetAutoReleaseInterval { get; set; }

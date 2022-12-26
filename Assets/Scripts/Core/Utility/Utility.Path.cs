@@ -61,11 +61,11 @@ namespace SFramework.Core
             /// <summary>
             /// AssetBundle路径
             /// </summary>
-            public static string ReadWriteAssetBundleDir
+            public static string ReadWriteAssetBundlePath
             {
                 get 
                 {
-                    return HotFixDataPath + "AssetBundles/";
+                    return HotFixDataPath + "AssetBundles";
                 }
             }
             /// <summary>
@@ -75,9 +75,22 @@ namespace SFramework.Core
             {
                 get
                 {
-                    return StreamingAssetsPath + "AssetBundles/";
+                    return StreamingAssetsPath + "AssetBundles";
                 }
             }
+            /// <summary>
+            /// 合并路径
+            /// </summary>
+            /// <param name="path1"></param>
+            /// <param name="path2"></param>
+            /// <returns></returns>
+            public static string CombinePath(string path1 ,string path2)
+            {
+                return System.IO.Path.Combine(path1, path2);
+            }
+  
+
+
 
         }
     }
