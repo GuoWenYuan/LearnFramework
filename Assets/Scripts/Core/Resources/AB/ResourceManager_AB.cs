@@ -74,8 +74,8 @@ namespace SFramework.Core
                 return;
             }
             string bundleName = ConvertAsset2BundleName(assetName, resourceType);
-            BundleRef bundleRef = TryGetBundle(bundleName);
-            if (bundleRef != null)
+            
+            if (m_ResourceLoader.TryGetBundle(bundleName, out BundleRef bundleRef))
             {
                 if (m_ResourceLoader.IsContainAsset(bundleName, assetName))
                 {
@@ -94,12 +94,12 @@ namespace SFramework.Core
 
         public T LoadAsset<T>(string bundleName, LoadAssetCallBacks loadAssetCallBacks) where T : UnityEngine.Object
         {
-           
+            return null;
         }
 
         public T LoadAssetAsync<T>(string bundleName, LoadAssetCallBacks loadAssetCallBacks) where T : UnityEngine.Object
         {
-           
+            return null;
         }
 
   
@@ -140,17 +140,7 @@ namespace SFramework.Core
             return assetName + Utility.Dafult.BundleSuffix;
         }
 
-        /// <summary>
-        /// 检测bundle是否已经加载过了
-        /// </summary>
-        /// <param name="assetName"></param>
-        /// <returns></returns>
-        private BundleRef TryGetBundle(string bundleName)
-        { 
-            if (m_BundleRefDic.ContainsKey(bundleName))
-                return m_BundleRefDic[bundleName];
-            return null;
-        }
+  
 
         public void SetCurrentVariant(string currentVariant)
         {

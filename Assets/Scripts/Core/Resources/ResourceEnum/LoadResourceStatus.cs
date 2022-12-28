@@ -49,6 +49,13 @@
         /// <summary>
         /// 加载资源错误。
         /// </summary>
-        AssetError
+        AssetError,
+
+        /// <summary>
+        /// 未找到Bundle信息
+        /// </summary>
+        NotExistInfo,
+
+
     }
 }

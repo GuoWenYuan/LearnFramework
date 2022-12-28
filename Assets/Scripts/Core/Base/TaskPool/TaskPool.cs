@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SFramework.Core
 {
-    public class TaskPool<T> : IUpdate , IShutDown where T: TaskBase
+    public class TaskPool<T,Agent> : IUpdate , IShutDown where T: TaskBase where Agent : ITaskAgent<T>,new()
     {
         /// <summary>
         /// 闲置的任务
@@ -25,15 +25,24 @@ namespace SFramework.Core
         private bool m_Paused;
 
         /// <summary>
-        /// 最大闲置代理任务个数
+        /// 最大代理数量
         /// </summary>
-        private int m_FreeAgentMaxCount = 10;
-        public TaskPool()
+        private int m_MaxAgentCount;
+  
+        public TaskPool(int maxAgentCount)
         {
             m_FreeAgents = new Stack<ITaskAgent<T>>();
             m_WorkingAgents = new SLinkedList<ITaskAgent<T>>();
             m_WaitingTasks = new SLinkedList<T>();
+            m_MaxAgentCount = maxAgentCount;
         }
+
+   
+        /// <summary>
+        /// 最大代理数量
+        /// </summary>
+        public int MaxAgentCount { get => m_MaxAgentCount; set => m_MaxAgentCount = value; }
+
         /// <summary>
         /// 获取或设置任务池是否被暂停。
         /// </summary>
@@ -101,6 +110,7 @@ namespace SFramework.Core
                     current = current.Next;
                     continue;
                 }
+                current.Value.OnComplete();
                 LinkedListNode<ITaskAgent<T>> next = current.Next;
                 current.Value.Reset();
                 AddFreeAgent(current.Value);
@@ -124,7 +134,13 @@ namespace SFramework.Core
                 LinkedListNode<ITaskAgent<T>> agentNode = m_WorkingAgents.AddLast(taskAgent);
                 T task = current.Value;
                 LinkedListNode<T> next = current.Next;
+                taskAgent.Initialize();
                 StartTaskStatus status = taskAgent.Start(task);
+
+                if (status == StartTaskStatus.Done)
+                { 
+                    taskAgent.OnComplete();
+                }
                 if (status == StartTaskStatus.Done || status == StartTaskStatus.HasToWait || status == StartTaskStatus.UnknownError)
                 {
                     taskAgent.Reset();
@@ -175,7 +191,7 @@ namespace SFramework.Core
         /// 增加任务代理
         /// </summary>
         /// <param name="agent"></param>
-        public void AddAgent(ITaskAgent<T> agent)
+        private void AddAgent(ITaskAgent<T> agent)
         {
             if (agent == null)
             {
@@ -207,6 +223,11 @@ namespace SFramework.Core
             else
             {
                 m_WaitingTasks.AddFirst(task);
+            }
+            ///在增加任务的时候，如果小于最大的代理数，则进行新代理增加
+            if (TotalAgentCount <= MaxAgentCount)
+            {
+                AddAgent(new Agent());
             }
         }
         #region RemoveTask
@@ -335,7 +356,7 @@ namespace SFramework.Core
                 T workingTask = workingAgent.Task;
                 if (workingTask.SerialId == serialId)
                 {
-                    return new TaskInfo(workingTask.SerialId, workingTask.Tag, workingTask.Priority, workingTask.UserData, workingTask.Done ? TaskStatus.Done : TaskStatus.Doing, workingTask.Description);
+                    return new TaskInfo(workingTask.SerialId, workingTask.Tag, workingTask.Priority, workingTask.Done ? TaskStatus.Done : TaskStatus.Doing, workingTask.Description);
                 }
             }
 
@@ -343,7 +364,7 @@ namespace SFramework.Core
             {
                 if (waitingTask.SerialId == serialId)
                 {
-                    return new TaskInfo(waitingTask.SerialId, waitingTask.Tag, waitingTask.Priority, waitingTask.UserData, TaskStatus.Todo, waitingTask.Description);
+                    return new TaskInfo(waitingTask.SerialId, waitingTask.Tag, waitingTask.Priority, TaskStatus.Todo, waitingTask.Description);
                 }
             }
 
@@ -380,7 +401,7 @@ namespace SFramework.Core
                 T workingTask = workingAgent.Task;
                 if (workingTask.Tag == tag)
                 {
-                    results.Add(new TaskInfo(workingTask.SerialId, workingTask.Tag, workingTask.Priority, workingTask.UserData, workingTask.Done ? TaskStatus.Done : TaskStatus.Doing, workingTask.Description));
+                    results.Add(new TaskInfo(workingTask.SerialId, workingTask.Tag, workingTask.Priority, workingTask.Done ? TaskStatus.Done : TaskStatus.Doing, workingTask.Description));
                 }
             }
 
@@ -388,7 +409,7 @@ namespace SFramework.Core
             {
                 if (waitingTask.Tag == tag)
                 {
-                    results.Add(new TaskInfo(waitingTask.SerialId, waitingTask.Tag, waitingTask.Priority, waitingTask.UserData, TaskStatus.Todo, waitingTask.Description));
+                    results.Add(new TaskInfo(waitingTask.SerialId, waitingTask.Tag, waitingTask.Priority, TaskStatus.Todo, waitingTask.Description));
                 }
             }
         }
@@ -404,12 +425,12 @@ namespace SFramework.Core
             foreach (ITaskAgent<T> workingAgent in m_WorkingAgents)
             {
                 T workingTask = workingAgent.Task;
-                results[index++] = new TaskInfo(workingTask.SerialId, workingTask.Tag, workingTask.Priority, workingTask.UserData, workingTask.Done ? TaskStatus.Done : TaskStatus.Doing, workingTask.Description);
+                results[index++] = new TaskInfo(workingTask.SerialId, workingTask.Tag, workingTask.Priority, workingTask.Done ? TaskStatus.Done : TaskStatus.Doing, workingTask.Description);
             }
 
             foreach (T waitingTask in m_WaitingTasks)
             {
-                results[index++] = new TaskInfo(waitingTask.SerialId, waitingTask.Tag, waitingTask.Priority, waitingTask.UserData, TaskStatus.Todo, waitingTask.Description);
+                results[index++] = new TaskInfo(waitingTask.SerialId, waitingTask.Tag, waitingTask.Priority, TaskStatus.Todo, waitingTask.Description);
             }
 
             return results;
@@ -430,12 +451,12 @@ namespace SFramework.Core
             foreach (ITaskAgent<T> workingAgent in m_WorkingAgents)
             {
                 T workingTask = workingAgent.Task;
-                results.Add(new TaskInfo(workingTask.SerialId, workingTask.Tag, workingTask.Priority, workingTask.UserData, workingTask.Done ? TaskStatus.Done : TaskStatus.Doing, workingTask.Description));
+                results.Add(new TaskInfo(workingTask.SerialId, workingTask.Tag, workingTask.Priority,  workingTask.Done ? TaskStatus.Done : TaskStatus.Doing, workingTask.Description));
             }
 
             foreach (T waitingTask in m_WaitingTasks)
             {
-                results.Add(new TaskInfo(waitingTask.SerialId, waitingTask.Tag, waitingTask.Priority, waitingTask.UserData, TaskStatus.Todo, waitingTask.Description));
+                results.Add(new TaskInfo(waitingTask.SerialId, waitingTask.Tag, waitingTask.Priority,TaskStatus.Todo, waitingTask.Description));
             }
         }
         #endregion

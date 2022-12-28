@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
+using System.IO;
 
 namespace SFramework.Core
 {
@@ -24,55 +23,63 @@ namespace SFramework.Core
             Processing,
         }
 
-        public  static class ResourceLoader
+        public  class ResourceLoader : IAwake,IUpdate
         {
-            private static SManifest m_Manifest;
-
-            private static Dictionary<string,BundleRef> m_CacheBundleRef = new Dictionary<string,BundleRef>();
+            private SManifest m_Manifest;
 
             /// <summary>
-            /// 所有的加载bundle的请求
+            /// 所有已加载的内容
             /// </summary>
-            private static Queue<BundleRequest> S_BundleRequests = new Queue<BundleRequest>();
-
-            /// <summary>
-            /// 等待中的bundle加载请求
-            /// </summary>
-            private static Queue<BundleRequest> S_WaitBundleRequests = new Queue<BundleRequest>();
-
-            /// <summary>
-            /// 资源加载器状态
-            /// </summary>
-            public static ResourceLoaderStatus ResourceLoaderStatus { get; private set; } = ResourceLoaderStatus.Wait;
+            private  Dictionary<string,BundleRef> m_CacheBundleRef = new Dictionary<string,BundleRef>();
 
 
-           
+            private TaskPool<LoaderBundleTask, LoaderBundleAgent> m_BundleLoaderTask;
 
-            public static int BundleCount => m_CacheBundleRef.Count;
-            public static void OnAwake()
+            public int BundleCount => m_CacheBundleRef.Count;
+
+
+            public int MaxLoadBundleCount => m_Manifest.maxLoadBundleCount;
+            public void OnAwake()
             {
                 //初始化Manifest
                 m_Manifest.OnAwake();
-                //初始化资源映射表 key => assetname  value => bundlename
+                m_BundleLoaderTask = new TaskPool<LoaderBundleTask, LoaderBundleAgent>(m_Manifest.maxLoadBundleCount);
             }
 
-            public static void OnUpdate()
-            { 
+            public void OnUpdate(float elapseSeconds, float realElapseSeconds)
+            {
                 
             }
+
+
+
             /// <summary>
-            /// 增加bundle请求
+            /// 加载bundle
             /// </summary>
-            /// <param name="bundleRequest"></param>
-            public static void AddBundleRequest(BundleRequest bundleRequest)
+            /// <param name="bundleName"></param>
+            public LoaderBundleTask AddLoaderTask(string bundleName ,LoadResourceMode loadResourceMode,LoadAssetCallBacks loadAssetCallBacks,int serialId = 0)
             {
-                S_WaitBundleRequests.Enqueue(bundleRequest);
+                LoaderBundleTask loaderBundleTask = LoaderBundleTask.Get(bundleName, this, loadResourceMode, loadAssetCallBacks);
+                loaderBundleTask.SerialId = serialId;
+                m_BundleLoaderTask.AddTask(loaderBundleTask);
+                return loaderBundleTask;
             }
-            
+
+            /// <summary>
+            /// 尝试获取bundle
+            /// </summary>
+            /// <param name="bundleName"></param>
+            /// <param name="bundleRef"></param>
+            /// <returns></returns>
+            public bool TryGetBundle(string bundleName , out BundleRef bundleRef)
+            {
+                return m_CacheBundleRef.TryGetValue(bundleName, out bundleRef);
+            }
+
             /// <summary>
             /// 重新加载assetbundle
             /// </summary>
-            public static void ReloadAssetBundle(string bundleName)
+            public void ReloadAssetBundle(string bundleName)
             {
                 if (!m_CacheBundleRef.TryGetValue(bundleName, out BundleRef bundleRef)) return;
                 if (bundleRef == null) return;
@@ -86,7 +93,7 @@ namespace SFramework.Core
             /// </summary>
             /// <param name="bundleName"></param>
             /// <returns></returns>
-            public static BundleInfo GetBundleInfo(string bundleName)
+            public  BundleInfo GetBundleInfo(string bundleName)
             { 
                 return m_Manifest.GetBundleInfo(bundleName);
             }
@@ -97,7 +104,7 @@ namespace SFramework.Core
             /// <param name="bundleName"></param>
             /// <param name="assetName"></param>
             /// <returns></returns>
-            public static bool IsContainAsset(string bundleName, string assetName)
+            public  bool IsContainAsset(string bundleName, string assetName)
             { 
                 return m_Manifest.IsContainAsset(bundleName, assetName);
             }
@@ -106,7 +113,7 @@ namespace SFramework.Core
             /// 获取常驻bundle名称
             /// </summary>
             /// <returns></returns>
-            public static List<string> GetPermanentBundleNames()
+            public  List<string> GetPermanentBundleNames()
             {
                 return m_Manifest.PermanentBundles;
             }
@@ -116,7 +123,7 @@ namespace SFramework.Core
             /// </summary>
             /// <param name="bundleName"></param>
             /// <returns></returns>
-            public static bool IsPermanentBundle(string bundleName)
+            public  bool IsPermanentBundle(string bundleName)
             {
                 return m_Manifest.IsPermanentBundle(bundleName);
             }
@@ -125,11 +132,12 @@ namespace SFramework.Core
             /// </summary>
             /// <param name="bundleName"></param>
             /// <returns></returns>
-            public static string[] GetDependencies(string bundleName)
+            public  string[] GetDependencies(string bundleName)
             { 
                 return m_Manifest.GetDependencies(bundleName);
             }
 
+         
         }
     }
 }

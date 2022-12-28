@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 namespace SFramework.Core
 {
@@ -76,14 +77,40 @@ namespace SFramework.Core
             /// </summary>
             public string readWirtePath;
 
- 
+            /// <summary>
+            /// 真实路径
+            /// </summary>
+            public string realPath;
+
+          /// <summary>
+          /// 真实路径是否为null
+          /// </summary>
+            public bool RealPathIsEmpty => string.IsNullOrEmpty(realPath);
+
+
+            /// <summary>
+            /// 检查bundle的路径是否存在
+            /// </summary>
+            /// <returns></returns>
+            public bool CheckBundlePath()
+            {
+                if (File.Exists(readWirtePath) && RealPathIsEmpty)
+                    realPath = readWirtePath;
+                if (File.Exists(readOnlyPath) && RealPathIsEmpty)
+                    realPath = readOnlyPath;
+                return RealPathIsEmpty;
+
+            }
+
+            public bool CheckDependencies => dependencies!= null && dependencies.Length > 0;
+
             /// <summary>
             /// 是否为该类型
             /// </summary>
             /// <param name="bundleType"></param>
             /// <returns></returns>
             public bool IsType(BundleType bundleType)
-            { 
+            {          
                 return (type & bundleType) == bundleType;
             }
 

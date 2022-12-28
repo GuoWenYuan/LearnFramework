@@ -50,11 +50,6 @@ namespace SFramework.Core
         public long size;
 
         /// <summary>
-        /// 资源加载的状态
-        /// </summary>
-        public LoadResourceResult loadResourceStatus;
-
-        /// <summary>
         /// 资源异步加载对象
         /// </summary>
         public AssetBundleCreateRequest bundleCreateRequest;
@@ -73,7 +68,6 @@ namespace SFramework.Core
             name = string.Empty;
             path = string.Empty;
             size = 0;
-            loadResourceStatus = LoadResourceResult.None;
             refStatus = RefStatus.None;
             AssetBundle = null;
 
