@@ -8,9 +8,8 @@ using UnityEngine;
 
 namespace SFramework.Core
 {
-    public partial class ResourceManager_AB : SGameManager,IResource
+    public partial class ResourceManager_AB : IResource
     {
-        public override int Priority => 3;
 
 
         public string CurrentVariant => "";
@@ -25,16 +24,7 @@ namespace SFramework.Core
         /// 从 bundle中加载的资源缓存池，在无引用的情况下会被定时清除
         /// </summary>
         private Dictionary<string, AssetRef> m_AssetRefDic = new Dictionary<string, AssetRef>();
-        /// <summary>
-        /// 从资源池中实例化的gameobejct   key = instanceid  value = gameobject target
-        /// </summary>
-        private Dictionary<int, AssetRef> m_AssetRefCloneDic = new Dictionary<int, AssetRef>();
-        public int AssetCount => m_AssetRefCloneDic.Count;
-
-   
-
-     
-
+        
         /// <summary>
         /// Asset和bundle名称的映射表
         /// </summary>
@@ -47,13 +37,20 @@ namespace SFramework.Core
         public float BundleAutoReleaseInterval { get ; set; }
         public int BundleCapacity { get; set; }
 
-        public override void OnStart()
+        public void OnAwake()
         {
             //初始化所有数据，后续数据将会由配置文件进行生成
             AssetAutoReleaseInterval = 10;
             BundleAutoReleaseInterval = 10;
             AssetCapacity = 10;
             BundleCapacity = 10;
+            m_ResourceLoader = new ResourceLoader();
+            m_ResourceLoader.OnAwake();
+        }
+
+        public void OnUpdate(float elapseSeconds, float realElapseSeconds)
+        {
+            m_ResourceLoader.OnUpdate(elapseSeconds, realElapseSeconds);
         }
 
         /// <summary>
@@ -64,7 +61,7 @@ namespace SFramework.Core
         /// <param name="loadResourceMode"></param>
         /// <param name="loadAssetCallBacks"></param>
         /// <returns></returns>
-        public void Load<T>(string assetName, LoadResourceMode loadResourceMode,ResourceType resourceType, LoadAssetCallBacks loadAssetCallBacks) where T : UnityEngine.Object
+        public void LoadAsset<T>(string assetName, LoadResourceMode loadResourceMode,ResourceType resourceType, LoadAssetCallBacks loadAssetCallBacks) where T : UnityEngine.Object
         {
             AssetRef assetRef = TryGetAsset(assetName);
             if (assetRef != null)
@@ -74,33 +71,76 @@ namespace SFramework.Core
                 return;
             }
             string bundleName = ConvertAsset2BundleName(assetName, resourceType);
-            
+
             if (m_ResourceLoader.TryGetBundle(bundleName, out BundleRef bundleRef))
             {
                 if (m_ResourceLoader.IsContainAsset(bundleName, assetName))
                 {
-                    assetRef = ReferencePool.Acquire<AssetRef>();
-                    m_AssetRefDic.Add(assetName, assetRef);
-                    assetRef.Retain();
-                    m_Asset2BundleNameDic.Add(assetRef, bundleRef);
+                    assetRef = CreateAssetRef(assetName, bundleRef);
 
-                    loadAssetCallBacks.LoadAssetSuccessCallback?.Invoke(assetName, assetRef.Assets as T, 0, assetRef);
+                    loadAssetCallBacks.LoadAssetSuccessCallback?.Invoke(assetName, assetRef.Assets, 0, assetRef);
                     return;
                 }
+                else
+                {
+                    loadAssetCallBacks.LoadAssetFailureCallback?.Invoke(assetName, LoadResourceResult.AssetError, "资源不存在", null);
+                }
             }
-            
+            LoadBundle(bundleName, loadResourceMode, LoadBundleCallBacks<T>(loadAssetCallBacks, assetName));
+
+
         }
 
-
-        public T LoadAsset<T>(string bundleName, LoadAssetCallBacks loadAssetCallBacks) where T : UnityEngine.Object
+        /// <summary>
+        /// bundle加载的回调
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="loadAssetCallBacks"></param>
+        /// <param name="assetName"></param>
+        /// <returns></returns>
+        public LoadAssetCallBacks LoadBundleCallBacks<T>(LoadAssetCallBacks loadAssetCallBacks,string assetName) where T : UnityEngine.Object
         {
-            return null;
+            LoadAssetSuccessCallBack loadAssetSuccessCallBack = (bundleName, asset, duration, userData) =>
+            {
+                AssetRef assetRef = CreateAssetRef(assetName, userData as BundleRef);
+                loadAssetCallBacks.LoadAssetSuccessCallback?.Invoke(bundleName, assetRef.Assets, duration, assetRef);
+            };
+            LoadAssetFailureCallBack loadAssetFailureCallBack = (bundleName, result, errorMessage, userData) =>
+            { 
+                loadAssetCallBacks?.LoadAssetFailureCallback?.Invoke(bundleName, result, errorMessage, userData);
+            };
+            return new LoadAssetCallBacks(loadAssetSuccessCallBack, loadAssetFailureCallBack, null, null);
+        }
+        /// <summary>
+        /// 创建Asset对象
+        /// </summary>
+        /// <param name="assetName"></param>
+        /// <param name="bundleRef"></param>
+        /// <returns></returns>
+        private AssetRef CreateAssetRef(string assetName, BundleRef bundleRef)
+        {
+            AssetRef assetRef = ReferencePool.Acquire<AssetRef>();
+            m_AssetRefDic.Add(assetName, assetRef);
+            assetRef.Retain();
+            assetRef.Assets = bundleRef.AssetBundle.LoadAsset(assetName);
+            m_Asset2BundleNameDic.Add(assetRef, bundleRef);
+            return assetRef;
         }
 
-        public T LoadAssetAsync<T>(string bundleName, LoadAssetCallBacks loadAssetCallBacks) where T : UnityEngine.Object
+        /// <summary>
+        /// 加载Bundle
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="bundleName"></param>
+        /// <param name="loadResourceMode"></param>
+        /// <param name="loadAssetCallBacks"></param>
+        /// <returns></returns>
+        public LoaderBundleTask LoadBundle(string bundleName, LoadResourceMode loadResourceMode ,LoadAssetCallBacks loadAssetCallBacks)
         {
-            return null;
+            return m_ResourceLoader.LoadBundle(bundleName, loadResourceMode, loadAssetCallBacks);
         }
+
+
 
   
 
@@ -142,24 +182,11 @@ namespace SFramework.Core
 
   
 
-        public void SetCurrentVariant(string currentVariant)
+  
+
+        public void ShutDown()
         {
            
-        }
-
-        public void SetReadOnlyPath(string readOnlyPath)
-        {
-           
-        }
-
-        public void SetReadWritePath(string readWritePath)
-        {
-            
-        }
-
-        public void SetResourceMode(ResourceMode resourceMode)
-        {
-            
         }
     }
 }

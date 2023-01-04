@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: NewAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 21300000, guid: 6d3867855e82c8d43a957f060bbd3d08, type: 3}
+    - {fileID: 21300000, guid: be66c6ecc66501a4aa284379bae8f531, type: 3}
+    - {fileID: 21300000, guid: 51db0ec0cf1e3e540b9066477e41f607, type: 3}
+    - {fileID: 21300000, guid: 4c8e4be8d99895d42909e9c3198f0643, type: 3}
+    - {fileID: 21300000, guid: ccf45f06bd1067041894d4d2756adfe3, type: 3}
+    - {fileID: 21300000, guid: 6f8ca01a9fe3c8c40b68c417544e13a3, type: 3}
+    - {fileID: 21300000, guid: 945e8656d2b97a54cbdf728615c97036, type: 3}
+    - {fileID: 21300000, guid: 96a6273cfb071514a86651b2074ff52e, type: 3}
+    - {fileID: 21300000, guid: 25d7d29c8958d744a9391fb8fefb0591, type: 3}
+    - {fileID: 21300000, guid: 7415cfcef25c6544abdc9277b4595405, type: 3}
+    - {fileID: 21300000, guid: c07c5f88137937e4aa7c49e66d4ea617, type: 3}
+    - {fileID: 21300000, guid: 4682c1cda3e0e894d8bca5c692950f75, type: 3}
+    - {fileID: 21300000, guid: e81bb1e0d010d7f459236dd7910b0c8d, type: 3}
+    - {fileID: 21300000, guid: 471f232f9ef61e94d80793147141bc04, type: 3}
+    - {fileID: 21300000, guid: 6c1b670d1b8a6e945acff03d4b9df999, type: 3}
+    - {fileID: 21300000, guid: e26a1bc210b58d246bba0da3e402ec00, type: 3}
+    - {fileID: 21300000, guid: e9f267e788e411f4f8c8fcd4ed4e417e, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 51db0ec0cf1e3e540b9066477e41f607, type: 3}
+  - {fileID: 21300000, guid: e81bb1e0d010d7f459236dd7910b0c8d, type: 3}
+  - {fileID: 21300000, guid: e26a1bc210b58d246bba0da3e402ec00, type: 3}
+  - {fileID: 21300000, guid: 6d3867855e82c8d43a957f060bbd3d08, type: 3}
+  - {fileID: 21300000, guid: ccf45f06bd1067041894d4d2756adfe3, type: 3}
+  - {fileID: 21300000, guid: 945e8656d2b97a54cbdf728615c97036, type: 3}
+  - {fileID: 21300000, guid: e9f267e788e411f4f8c8fcd4ed4e417e, type: 3}
+  - {fileID: 21300000, guid: c07c5f88137937e4aa7c49e66d4ea617, type: 3}
+  - {fileID: 21300000, guid: 4c8e4be8d99895d42909e9c3198f0643, type: 3}
+  - {fileID: 21300000, guid: 6f8ca01a9fe3c8c40b68c417544e13a3, type: 3}
+  - {fileID: 21300000, guid: 96a6273cfb071514a86651b2074ff52e, type: 3}
+  - {fileID: 21300000, guid: 25d7d29c8958d744a9391fb8fefb0591, type: 3}
+  - {fileID: 21300000, guid: be66c6ecc66501a4aa284379bae8f531, type: 3}
+  - {fileID: 21300000, guid: 6c1b670d1b8a6e945acff03d4b9df999, type: 3}
+  - {fileID: 21300000, guid: 4682c1cda3e0e894d8bca5c692950f75, type: 3}
+  - {fileID: 21300000, guid: 7415cfcef25c6544abdc9277b4595405, type: 3}
+  - {fileID: 21300000, guid: 471f232f9ef61e94d80793147141bc04, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Icon_Prop_Hollows_Electric_002
+  - Icon_Prop_Hollows_Water_004
+  - Icon_Prop_Hollows_Wind_003
+  - Icon_Equip_Hallows_Null
+  - Icon_Prop_Hollows_Electric_004
+  - Icon_Prop_Hollows_Fire_002
+  - Icon_Prop_Hollows_Wind_004
+  - Icon_Prop_Hollows_Water_002
+  - Icon_Prop_Hollows_Electric_003
+  - Icon_Prop_Hollows_Fire_001
+  - Icon_Prop_Hollows_Fire_003
+  - Icon_Prop_Hollows_Fire_004
+  - Icon_Prop_Hollows_Electric_001
+  - Icon_Prop_Hollows_Wind_002
+  - Icon_Prop_Hollows_Water_003
+  - Icon_Prop_Hollows_Water_001
+  - Icon_Prop_Hollows_Wind_001
+  m_RenderDataMap: {}
+  m_Tag: NewAtlas
+  m_IsVariant: 0

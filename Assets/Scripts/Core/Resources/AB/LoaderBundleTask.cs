@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace SFramework.Core
 {
-    public partial class ResourceManager_AB
-    {
+
         public class LoaderBundleTask : TaskBase
         {
             /// <summary>
@@ -66,5 +65,5 @@ namespace SFramework.Core
         }
 
     }
-    
-}
+  
+

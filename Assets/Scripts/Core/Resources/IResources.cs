@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace SFramework.Core
 {
-    public interface IResource
+    public interface IResource : IAwake ,IUpdate, IShutDown
     {
 
         /// <summary>
@@ -22,13 +22,7 @@ namespace SFramework.Core
             get;
         }
 
-        /// <summary>
-        /// 资源数量
-        /// </summary>
-        int AssetCount
-        {
-            get;
-        }
+
 
         /// <summary>
         /// 资源数量
@@ -82,7 +76,7 @@ namespace SFramework.Core
 
 
 
-
+        /*
         /// <summary>
         /// 设置资源只读区路径。
         /// </summary>
@@ -106,22 +100,15 @@ namespace SFramework.Core
         /// </summary>
         /// <param name="currentVariant">当前变体。</param>
         void SetCurrentVariant(string currentVariant);
-
+        */
         /// <summary>
         /// 加载资源
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="assetName"></param>
         /// <returns></returns>
-        T LoadAsset<T>(string assetName, LoadAssetCallBacks loadAssetCallBacks) where T: UnityEngine.Object;
+        void LoadAsset<T>(string assetName, LoadResourceMode loadResourceMode, ResourceType resourceType, LoadAssetCallBacks loadAssetCallBacks) where T : UnityEngine.Object;
 
-        /// <summary>
-        /// 异步加载资源
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="assetName"></param>
-        /// <returns></returns>
-        T LoadAssetAsync<T>(string assetName, LoadAssetCallBacks loadAssetCallBacks) where T:UnityEngine.Object;
-
+        
     }
 }

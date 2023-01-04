@@ -5,8 +5,7 @@ using System.IO;
 
 namespace SFramework.Core
 {
-    public partial class ResourceManager_AB
-    {
+
         /// <summary>
         /// Bundle类型
         /// </summary>
@@ -94,7 +93,8 @@ namespace SFramework.Core
             /// <returns></returns>
             public bool CheckBundlePath()
             {
-                if (File.Exists(readWirtePath) && RealPathIsEmpty)
+                return RealPathIsEmpty;
+                if (File.Exists(readWirtePath))
                     realPath = readWirtePath;
                 if (File.Exists(readOnlyPath) && RealPathIsEmpty)
                     realPath = readOnlyPath;
@@ -299,4 +299,3 @@ namespace SFramework.Core
             }
         }
     }
-}

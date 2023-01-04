@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using System.IO;
+﻿using System.Collections.Generic;
 
 namespace SFramework.Core
 {
-    public partial class ResourceManager_AB
-    {
-        /// <summary>
-        /// 资源加载器状态
-        /// </summary>
-        public enum ResourceLoaderStatus
+    /// <summary>
+    /// 资源加载器状态
+    /// </summary>
+    public enum ResourceLoaderStatus
         { 
             /// <summary>
             /// 等待中
@@ -39,6 +34,19 @@ namespace SFramework.Core
 
 
             public int MaxLoadBundleCount => m_Manifest.maxLoadBundleCount;
+
+            /// <summary>
+            /// bundle加载任务的id
+            /// </summary>
+            int taskId = 0;
+
+            public int TaskId => taskId++;
+
+            /// <summary>
+            /// 当前资源池的工作状态
+            /// </summary>
+            public ResourceLoaderStatus ResourceLoaderStatus => m_BundleLoaderTask.WorkingAgentCount > 0 ? ResourceLoaderStatus.Processing : ResourceLoaderStatus.Wait;
+
             public void OnAwake()
             {
                 //初始化Manifest
@@ -50,9 +58,16 @@ namespace SFramework.Core
             {
                 
             }
-
-
-
+            /// <summary>
+            /// 加载bundle
+            /// </summary>
+            /// <param name="bundleName"></param>
+            /// <param name="loadResourceMode"></param>
+            /// <param name="loadAssetCallBacks"></param>
+            public LoaderBundleTask LoadBundle(string bundleName, LoadResourceMode loadResourceMode, LoadAssetCallBacks loadAssetCallBacks)
+            {
+                return AddLoaderTask(bundleName, loadResourceMode, loadAssetCallBacks, TaskId);
+            }
             /// <summary>
             /// 加载bundle
             /// </summary>
@@ -66,6 +81,21 @@ namespace SFramework.Core
             }
 
             /// <summary>
+            /// 增加bundle的ref
+            /// </summary>
+            /// <param name="bundleRef"></param>
+            public void AddBundleRef(BundleRef bundleRef)
+            {
+                if (bundleRef == null)
+                    return;
+                if (!m_CacheBundleRef.ContainsKey(bundleRef.name))
+                {
+                    m_CacheBundleRef.Add(bundleRef.name,bundleRef);
+                }
+            }
+
+
+            /// <summary>
             /// 尝试获取bundle
             /// </summary>
             /// <param name="bundleName"></param>
@@ -74,6 +104,17 @@ namespace SFramework.Core
             public bool TryGetBundle(string bundleName , out BundleRef bundleRef)
             {
                 return m_CacheBundleRef.TryGetValue(bundleName, out bundleRef);
+            }
+
+            /// <summary>
+            /// 尝试获取bundle
+            /// </summary>
+            /// <param name="bundleName"></param>
+            /// <param name="bundleRef"></param>
+            /// <returns></returns>
+            public bool TryGetBundle(string bundleName)
+            {
+                return m_CacheBundleRef.ContainsKey(bundleName);
             }
 
             /// <summary>
@@ -139,5 +180,5 @@ namespace SFramework.Core
 
          
         }
-    }
+    
 }
